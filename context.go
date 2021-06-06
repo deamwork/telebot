@@ -120,6 +120,12 @@ type Context interface {
 	// See Respond from bot.go.
 	Respond(resp ...*CallbackResponse) error
 
+	// Leave provides a way to leave context chat
+	Leave() error
+
+	// Bot returns a Bot instance for leave chat usage.
+	Bot() *Bot
+
 	// Get retrieves data from the context.
 	Get(key string) interface{}
 
@@ -355,6 +361,14 @@ func (c *nativeContext) Respond(resp ...*CallbackResponse) error {
 		return errors.New("telebot: context callback is nil")
 	}
 	return c.b.Respond(c.callback, resp...)
+}
+
+func (c *nativeContext) Leave() error {
+	return c.b.Leave(c.Message().Chat)
+}
+
+func (c *nativeContext) Bot() *Bot {
+	return c.b
 }
 
 func (c *nativeContext) Set(key string, value interface{}) {
